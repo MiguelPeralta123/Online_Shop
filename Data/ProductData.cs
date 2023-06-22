@@ -24,10 +24,7 @@ namespace OnlineShop.Data
                     {
                         while(await reader.ReadAsync())
                         {
-                            var product = new productModel();
-                            product.name = (string)reader["name"];
-                            product.description = (string)reader["description"];
-                            product.price = (decimal)reader["price"];
+                            var product = new productModel((string)reader["name"], (string)reader["description"], (decimal)reader["price"]);
                             list.Add(product);
                         }
                         return list;
@@ -69,21 +66,21 @@ namespace OnlineShop.Data
             }
         }
 
-        public async Task deleteProduct(productModel parameters)
+        public async Task deleteProduct(int id)
         {
             using(var sql = new SqlConnection(cn.ConnectionString()))
             {
                 using (var cmd = new SqlCommand("deleteProduct", sql))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("id", parameters.id);
+                    cmd.Parameters.AddWithValue("id", id);
                     await sql.OpenAsync();
                     await cmd.ExecuteNonQueryAsync();
                 }
             }
         }
 
-        public async Task<List<productModel>> listProductById(productModel parameters)
+        public async Task<List<productModel>> listProductById(int id)
         {
             var list = new List<productModel>();
             using (var sql = new SqlConnection(cn.ConnectionString()))
@@ -91,16 +88,13 @@ namespace OnlineShop.Data
                 using (var cmd = new SqlCommand("listProductById", sql))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("id", parameters.id);
+                    cmd.Parameters.AddWithValue("id", id);
                     await sql.OpenAsync();
                     using (var reader = await cmd.ExecuteReaderAsync())
                     {
                         while (await reader.ReadAsync())
                         {
-                            var product = new productModel();
-                            product.name = (string)reader["name"];
-                            product.description = (string)reader["description"];
-                            product.price = (decimal)reader["price"];
+                            var product = new productModel((string)reader["name"], (string)reader["description"], (decimal)reader["price"]);
                             list.Add(product);
                         }
                         return list;

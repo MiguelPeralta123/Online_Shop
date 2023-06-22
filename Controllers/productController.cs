@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using OnlineShop.Data;
 using OnlineShop.Models;
+using System.Security.Claims;
 
 namespace OnlineShop.Controllers
 {
@@ -9,6 +11,7 @@ namespace OnlineShop.Controllers
     public class productController: ControllerBase
     {
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<List<productModel>>> getProducts()
         {
             var function = new ProductData();
@@ -17,6 +20,7 @@ namespace OnlineShop.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task postProduct([FromBody] productModel parameters)   
         {
             var function = new ProductData();
@@ -24,6 +28,7 @@ namespace OnlineShop.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<ActionResult> putProduct(int id, [FromBody] productModel parameters)
         {
             var function = new ProductData();
@@ -33,22 +38,20 @@ namespace OnlineShop.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<ActionResult> deleteProduct(int id)
         {
             var function = new ProductData();
-            var parameters = new productModel();
-            parameters.id = id;
-            await function.deleteProduct(parameters);
+            await function.deleteProduct(id);
             return NoContent();
         }
 
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<ActionResult<List<productModel>>> getProductById(int id)
         {
             var function = new ProductData();
-            var parameters = new productModel();
-            parameters.id = id;
-            var list = await function.listProductById(parameters);
+            var list = await function.listProductById(id);
             return list;
         }
     }
