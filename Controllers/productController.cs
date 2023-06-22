@@ -27,6 +27,42 @@ namespace OnlineShop.Controllers
             await function.insertProduct(parameters);
         }
 
+        // Role authorization
+        /*
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> PostProduct([FromBody] productModel parameters)
+        {
+            // Get the user claims from the current authenticated user
+            var userClaims = User.Claims;
+
+            // Check if the user has the "admin" role claim
+            var isAdmin = userClaims.Any(c => c.Type == "role" && c.Value == "admin");
+            if (!isAdmin)
+            {
+                // Return an unauthorized response if the user is not an admin
+                return Unauthorized(new
+                {
+                    success = false,
+                    message = "You don´t have enough permissions",
+                    result = ""
+                });
+            }
+
+            // User is authorized as an admin, proceed with the logic
+            var function = new ProductData();
+            await function.insertProduct(parameters);
+
+            // Return a success response
+            return Ok(new
+            {
+                success = true,
+                message = "Product added successfully",
+                result = parameters
+            });
+        }
+        */
+
         [HttpPut("{id}")]
         [Authorize]
         public async Task<ActionResult> putProduct(int id, [FromBody] productModel parameters)
